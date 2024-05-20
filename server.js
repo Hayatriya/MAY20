@@ -56,12 +56,25 @@ app.use((req, res, next) => {
     next();
 });
 
-// Route to handle GET request for all users' API keys
-app.get('/allUsers/apiKeys', (req, res) => {
-    const apiKeys = Object.values(users).map(user => ({ email: user.email, apiKey: user.apiKey }));
-    res.json(apiKeys);
+// Route to handle POST request with user credentials
+app.post('/data', (req, res) => {
+    const { username, password } = req.body;
+    const user = users[username];
+
+    if (user && user.password === password) {
+        res.json({
+            message: 'Authentication successful',
+            email: user.email,
+            phone: user.phone,
+            address: user.address,
+            apiKey: user.apiKey
+        });
+    } else {
+        res.status(401).json({ message: 'Authentication failed' });
+    }
 });
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
+
