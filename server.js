@@ -27,12 +27,14 @@ app.options('*', (req, res) => {
 // Dummy user data (replace with your actual user data retrieval logic)
 const users = {
     'user1': {
+         password: 'password1',
         email: 'user1@example.com',
         mobile: '1234567890',
         apiKey: 'abcdef123456',
         address: '123 Main St, Anytown, USA'
     },
     'user2': {
+         password: 'password2',
         email: 'user2@example.com',
         mobile: '0987654321',
         apiKey: 'uvwxyz987654',
