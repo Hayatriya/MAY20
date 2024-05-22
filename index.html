@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Form</title>
+    <title>Cross-Origin Request Example</title>
 </head>
+
 <body>
-    <h2>Login Form</h2>
+    <h1>Cross-Origin Request Example</h1>
     <form id="loginForm">
         <div>
             <label for="username">Username:</label>
@@ -22,39 +22,27 @@
     <div id="userInfo"></div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-
-            // Assuming you are using fetch API to make a request to the server
-            fetch('https://example.com/login', {
-                method: 'POST',
+    document.getElementById('fetchData').addEventListener('click', () => {
+            fetch('http://localhost:3000/data', {
+                method: 'GET',
+                mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json',
-                    'Origin': window.location.origin // Sending the origin header
-                },
-                credentials: 'include', // Sending credentials
-                body: JSON.stringify({
-                    username: username,
-                    password: password
+                    'Origin': 'https://hayatriya.github.io/' // Your desired origin
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    const responseDiv = document.getElementById('response');
+                    responseDiv.innerHTML = JSON.stringify(data);
                 })
-            })
-            .then(response => response.json())
-            .then(data => {
-                // Display user information
-                document.getElementById('userInfo').innerHTML = `
-                    <h2>User Information</h2>
-                    <p>Email Address: ${data.email}</p>
-                    <p>Mobile No: ${data.mobile}</p>
-                    <p>API Key: ${data.apiKey}</p>
-                    <p>Address: ${data.address}</p>
-                `;
-            })
-            .catch(error => console.error('Error:', error));
-        });
-    </script>
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+     
+     
+            });
+
+</script>
 </body>
 </html>
 
