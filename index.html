@@ -25,11 +25,15 @@
                 method: 'GET',
                 mode: 'cors',
                 headers: {
-                    'Origin': 'https://hayatriya.github.io, // Your desired origin
                     'Authorization': 'Basic ' + btoa(username + ':' + password)
                 }
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const responseDiv = document.getElementById('response');
                     responseDiv.innerHTML = JSON.stringify(data, null, 2); // Pretty print the JSON
@@ -42,6 +46,9 @@
         });
     </script>
 </body>
+
+</html>
+
 
 </html>
 
