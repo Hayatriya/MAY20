@@ -4,17 +4,19 @@ const cors = require('cors');
 const app = express();
 const port = 3000;
 
-// Enable CORS with custom options
-app.use(cors());
+// Enable CORS with dynamic origin
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow all origins for simplicity; you can replace this with your specific origin
+        callback(null, true);
+    },
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true
+}));
 
 // Example data endpoint
 app.get('/data', (req, res) => {
-    // Set Access-Control-Allow-Origin header to reflect request origin
-    res.setHeader('Access-Control-Allow-Origin',req.headers.origin);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-   
     const data = {
         'testuser1': {
             password: 'password1',
