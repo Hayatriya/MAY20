@@ -1,77 +1,60 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
 
-// Dummy user data for demonstration
-const users = {
-    'testuser1': {
-        password: 'password1',
-        email: 'testuser1@example.com',
-        phone: '123-456-7891',
-        address: '123 Test St, Test City, Test Country',
-        apiKey: 'abc123xyz1'
-    },
-    'testuser2': {
-        password: 'password2',
-        email: 'testuser2@example.com',
-        phone: '123-456-7892',
-        address: '124 Test St, Test City, Test Country',
-        apiKey: 'abc123xyz2'
-    },
-    'testuser3': {
-        password: 'password3',
-        email: 'testuser3@example.com',
-        phone: '123-456-7893',
-        address: '125 Test St, Test City, Test Country',
-        apiKey: 'abc123xyz3'
-    },
-    'testuser4': {
-        password: 'password4',
-        email: 'testuser4@example.com',
-        phone: '123-456-7894',
-        address: '126 Test St, Test City, Test Country',
-        apiKey: 'abc123xyz4'
-    },
-    'testuser5': {
-        password: 'password5',
-        email: 'testuser5@example.com',
-        phone: '123-456-7895',
-        address: '127 Test St, Test City, Test Country',
-        apiKey: 'abc123xyz5'
-    }
-};
-
-// CORS middleware with misconfiguration
+// Enable CORS with reflecting the Origin header from the request
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin); // Reflects the request origin
-    res.header('Access-Control-Allow-Credentials', 'true'); // Allows credentials
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    const origin = req.headers.origin;
+    if (origin) {
+        res.header('Access-Control-Allow-Origin', origin); // Reflecting Origin header
+        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+        res.header('Access-Control-Allow-Credentials', 'true'); // Allowing credentials (unsafe)
+    }
     next();
 });
 
-// Route to handle POST request with user credentials
-app.post('/data', (req, res) => {
-    const { username, password } = req.body;
-    const user = users[username];
+// Handle preflight requests
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.status(200).send();
+});
 
-    if (user && user.password === password) {
-        res.json({
-            message: 'Authentication successful',
-            email: user.email,
-            phone: user.phone,
-            address: user.address,
-            apiKey: user.apiKey
-        });
-    } else {
-        res.status(401).json({ message: 'Authentication failed' });
+// Dummy user data (replace with your actual user data retrieval logic)
+const users = {
+    'user1': {
+        email: 'user1@example.com',
+        mobile: '1234567890',
+        apiKey: 'abcdef123456',
+        address: '123 Main St, Anytown, USA'
+    },
+    'user2': {
+        email: 'user2@example.com',
+        mobile: '0987654321',
+        apiKey: 'uvwxyz987654',
+        address: '456 Elm St, Othertown, USA'
     }
+};
+
+// Login route
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+
+    // Dummy authentication logic (replace with your actual authentication logic)
+    if (username && password && users[username] && password === 'password') {
+        res.json(users[username]);
+    } else {
+        res.status(401).json({ error: 'Invalid username or password' });
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 app.listen(PORT, () => {
