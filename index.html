@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Cross-Origin Request Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
 </head>
-
 <body>
-    <h1>Cross-Origin Request Example</h1>
+    <h2>Login Form</h2>
     <form id="loginForm">
         <div>
             <label for="username">Username:</label>
@@ -22,27 +22,41 @@
     <div id="userInfo"></div>
 
     <script>
-    document.getElementById('fetchData').addEventListener('click', () => {
-            fetch('http://localhost:3000/data', {
-                method: 'GET',
-                mode: 'cors',
-                headers: {
-                    'Origin': 'https://hayatriya.github.io/' // Your desired origin
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    const responseDiv = document.getElementById('response');
-                    responseDiv.innerHTML = JSON.stringify(data);
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
-     
-     
-            });
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
 
-</script>
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Assuming you are using fetch API to make a request to the server
+            fetch('https://localhost/3000', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Origin': window.location.origin // Sending the origin header
+                },
+                credentials: 'include', // Sending credentials
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display user information
+                document.getElementById('userInfo').innerHTML = `
+                    <h2>User Information</h2>
+                    <p>Email Address: ${data.email}</p>
+                    <p>Mobile No: ${data.mobile}</p>
+                    <p>API Key: ${data.apiKey}</p>
+                    <p>Address: ${data.address}</p>
+                `;
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 </html>
+
+
 
