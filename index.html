@@ -1,51 +1,60 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>Cross-Origin Request Example</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
 </head>
-
 <body>
-    <h1>Cross-Origin Request Example</h1>
-    <form id="userForm">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Fetch Data</button>
+    <h2>Login Form</h2>
+    <form id="loginForm">
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username">
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password">
+        </div>
+        <button type="submit">Login</button>
     </form>
-    <div id="response"></div>
+
+    <div id="userInfo"></div>
+
     <script>
-        document.getElementById('userForm').addEventListener('submit', (event) => {
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
 
-            fetch('http://localhost:3000/data', {
+            // Assuming you are using fetch API to make a request to the server
+            fetch('https://example.com/login', {
                 method: 'POST',
-                mode: 'cors',
-                credentials: 'include',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Origin': window.location.origin // Sending the origin header
                 },
+                credentials: 'include', // Sending credentials
                 body: JSON.stringify({
                     username: username,
                     password: password
                 })
             })
-                .then(response => response.json())
-                .then(data => {
-                    const responseDiv = document.getElementById('response');
-                    responseDiv.innerHTML = JSON.stringify(data, null, 2); // Pretty print JSON
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                });
+            .then(response => response.json())
+            .then(data => {
+                // Display user information
+                document.getElementById('userInfo').innerHTML = `
+                    <h2>User Information</h2>
+                    <p>Email Address: ${data.email}</p>
+                    <p>Mobile No: ${data.mobile}</p>
+                    <p>API Key: ${data.apiKey}</p>
+                    <p>Address: ${data.address}</p>
+                `;
+            })
+            .catch(error => console.error('Error:', error));
         });
     </script>
 </body>
-
 </html>
+
