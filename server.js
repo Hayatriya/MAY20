@@ -24,17 +24,17 @@ app.options('*', (req, res) => {
     res.status(200).send();
 });
 
-// Dummy user data (replace with your actual user data retrieval logic)
+// Dummy user data with hardcoded usernames and passwords
 const users = {
     'user1': {
-         password: 'password1',
+        password: 'password1',
         email: 'user1@example.com',
         mobile: '1234567890',
         apiKey: 'abcdef123456',
         address: '123 Main St, Anytown, USA'
     },
     'user2': {
-         password: 'password2',
+        password: 'password2',
         email: 'user2@example.com',
         mobile: '0987654321',
         apiKey: 'uvwxyz987654',
@@ -46,8 +46,8 @@ const users = {
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    // Dummy authentication logic (replace with your actual authentication logic)
-    if (username && password && users[username] && password === 'password') {
+    // Dummy authentication logic
+    if (username && password && users[username] && users[username].password === password) {
         res.json(users[username]);
     } else {
         res.status(401).json({ error: 'Invalid username or password' });
@@ -55,10 +55,6 @@ app.post('/login', (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
-
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
